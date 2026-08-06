@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جميلتي - Jamilati</title>
+    <!-- ربط ملف التنسيق -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="img-box">
+        <img id="main-product-img" src="https://via.placeholder.com/400x300" alt="صورة المنتج">
+    </div>
+    
+    <h1 id="product-title">اسم المنتج...</h1>
+    <p id="product-desc">وصف المنتج سيظهر هنا تلقائياً...</p>
+    
+    <div class="price-wrapper">
+        <span class="price" id="product-price">0 د.م</span>
+        <span class="old-price" id="product-oldprice"></span>
+    </div>
+
+    <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color, #e2e8f0);">
+
+    <form id="order-form">
+        <h3>أطلب الآن واستلم عند التوصيل</h3>
+        <div class="form-group">
+            <label for="client-name">الاسم الكامل:</label>
+            <input type="text" id="client-name" required placeholder="أدخل اسمك الكامل">
+        </div>
+        <div class="form-group">
+            <label for="client-phone">رقم الهاتف:</label>
+            <input type="tel" id="client-phone" required placeholder="06XXXXXXXX">
+        </div>
+        <div class="form-group">
+            <label for="client-city">المدينة:</label>
+            <input type="text" id="client-city" required placeholder="مدينتك">
+        </div>
+        <button type="submit">تأكيد الطلب الآن</button>
+    </form>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

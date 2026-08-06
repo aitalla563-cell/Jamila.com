@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - جميلتي</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .stats { display: flex; gap: 15px; }
+        .stat-box { flex: 1; background: #eef2ff; padding: 15px; border-radius: 8px; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: right; }
+        th { background-color: #f8fafc; }
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; }
+        .modal-content { background:white; padding:20px; border-radius:8px; width:400px; }
+        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-primary { background: #3b82f6; color: white; }
+    </style>
+</head>
+<body>
+
+<!-- شاشة تسجيل الدخول -->
+<div id="login-screen" class="card" style="max-width: 400px; margin: 50px auto;">
+    <h2>تسجيل الدخول للوحة التحكم</h2>
+    <form id="login-form">
+        <div style="margin-bottom:10px;">
+            <input type="email" id="login-email" placeholder="البريد الإلكتروني" required style="width:100%; padding:8px;">
+        </div>
+        <div style="margin-bottom:10px;">
+            <input type="password" id="login-pass" placeholder="كلمة السر" required style="width:100%; padding:8px;">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">دخول</button>
+    </form>
+</div>
+
+<!-- لوحة التحكم -->
+<div id="admin-dashboard" style="display:none;">
+    <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+        <h2>إدارة الطلبات والإعدادات</h2>
+        <div>
+            <button id="open-settings-btn" class="btn btn-primary">الإعدادات</button>
+            <button id="logout-btn" class="btn" style="background:#ef4444; color:white;">خروج</button>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-box">إجمالي الطلبات: <h3 id="stat-total-orders">0</h3></div>
+        <div class="stat-box">قيد الانتظار: <h3 id="stat-pending-orders">0</h3></div>
+        <div class="stat-box">تم التسليم: <h3 id="stat-delivered-orders">0</h3></div>
+        <div class="stat-box">المبيعات: <h3 id="stat-total-sales">0 د.م</h3></div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <h3>قائمة الطلبات</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>التاريخ</th>
+                    <th>الاسم</th>
+                    <th>الهاتف</th>
+                    <th>المدينة</th>
+                    <th>المنتج</th>
+                    <th>الحالة</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="orders-table-body"></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- نافذة الإعدادات -->
+<div id="settings-modal" class="modal">
+    <div class="modal-content">
+        <h3>تعديل إعدادات الصفحة</h3>
+        <form id="settings-form">
+            <input type="text" id="set-title" placeholder="عنوان المنتج" style="width:100%; margin-bottom:8px;">
+            <textarea id="set-desc" placeholder="الوصف" style="width:100%; margin-bottom:8px;"></textarea>
+            <input type="text" id="set-price" placeholder="السعر" style="width:100%; margin-bottom:8px;">
+            <input type="text" id="set-oldprice" placeholder="السعر القديم" style="width:100%; margin-bottom:8px;">
+            <input type="text" id="set-whatsapp" placeholder="رقم الواتساب (مثال: 212600000000)" style="width:100%; margin-bottom:8px;">
+            <textarea id="set-images-list" placeholder="روابط الصور (رابط كل صورة في سطر)" style="width:100%; margin-bottom:8px;"></textarea>
+            <textarea id="set-pixels" placeholder="أكواد Pixels" style="width:100%; margin-bottom:8px;"></textarea>
+            
+            <div style="display:flex; justify-content:space-between; margin-top:10px;">
+                <button type="submit" class="btn btn-primary">حفظ</button>
+                <button type="button" id="close-settings" class="btn">إلغاء</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="module" src="admin.js"></script>
+</body>
+</html>

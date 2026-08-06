@@ -1,0 +1,150 @@
+// admin.js
+import { 
+    db, auth, doc, onSnapshot, updateDoc, setDoc, deleteDoc,
+    signInWithEmailAndPassword, signOut, onAuthStateChanged,
+    collection, query, orderBy 
+} from "./firebase.js";
+
+// 1. إدارة حالة تسجيل الدخول
+onAuthStateChanged(auth, (user) => {
+    const loginScreen = document.getElementById('login-screen');
+    const adminDashboard = document.getElementById('admin-dashboard');
+
+    if (user) {
+        if (loginScreen) loginScreen.style.display = 'none';
+        if (adminDashboard) adminDashboard.style.display = 'block';
+        loadOrders();
+        loadSettings();
+    } else {
+        if (loginScreen) loginScreen.style.display = 'block';
+        if (adminDashboard) adminDashboard.style.display = 'none';
+    }
+});
+
+// تسجيل الدخول
+document.getElementById('login-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const pass = document.getElementById('login-pass').value;
+    try {
+        await signInWithEmailAndPassword(auth, email, pass);
+    } catch (err) {
+        alert('خطأ في تسجيل الدخول: ' + err.message);
+    }
+});
+
+// تسجيل الخروج
+document.getElementById('logout-btn')?.addEventListener('click', () => signOut(auth));
+
+// 2. تحميل الطلبات وتحديث الإحصائيات
+function loadOrders() {
+    const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+        const tbody = document.getElementById('orders-table-body');
+        if (!tbody) return;
+        
+        tbody.innerHTML = '';
+        
+        let total = 0, pending = 0, delivered = 0, totalSales = 0;
+
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const id = docSnap.id;
+            total++;
+
+            if (data.status === 'قيد الانتظار') pending++;
+            if (data.status === 'تم التسليم') {
+                delivered++;
+                const priceNum = parseFloat(data.price) || 0;
+                totalSales += priceNum;
+            }
+
+            const dateStr = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleDateString('ar-MA') : 'الآن';
+
+            tbody.innerHTML += `
+                <tr>
+                    <td>${dateStr}</td>
+                    <td>${data.name || ''}</td>
+                    <td><a href="https://wa.me/${data.phone?.replace(/[^0-9]/g, '')}" target="_blank">${data.phone || ''}</a></td>
+                    <td>${data.city || ''}</td>
+                    <td>${data.product || ''}</td>
+                    <td>
+                        <select onchange="updateOrderStatus('${id}', this.value)">
+                            <option value="قيد الانتظار" ${data.status === 'قيد الانتظار' ? 'selected' : ''}>قيد الانتظار</option>
+                            <option value="مؤكد" ${data.status === 'مؤكد' ? 'selected' : ''}>مؤكد</option>
+                            <option value="تم الشحن" ${data.status === 'تم الشحن' ? 'selected' : ''}>تم الشحن</option>
+                            <option value="تم التسليم" ${data.status === 'تم التسليم' ? 'selected' : ''}>تم التسليم</option>
+                            <option value="ملغي" ${data.status === 'ملغي' ? 'selected' : ''}>ملغي</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button onclick="deleteOrder('${id}')" style="color: red; cursor: pointer;">حذف</button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        if (document.getElementById('stat-total-orders')) document.getElementById('stat-total-orders').innerText = total;
+        if (document.getElementById('stat-pending-orders')) document.getElementById('stat-pending-orders').innerText = pending;
+        if (document.getElementById('stat-delivered-orders')) document.getElementById('stat-delivered-orders').innerText = delivered;
+        if (document.getElementById('stat-total-sales')) document.getElementById('stat-total-sales').innerText = totalSales + ' د.م';
+    });
+}
+
+// تحديث حالة الطلب
+window.updateOrderStatus = async (id, status) => {
+    await updateDoc(doc(db, "orders", id), { status });
+};
+
+// حذف الطلب
+window.deleteOrder = async (id) => {
+    if (confirm('هل أنت تأكد من حذف هذا الطلب؟')) {
+        await deleteDoc(doc(db, "orders", id));
+    }
+};
+
+// 3. إدارة الإعدادات والنافذة المنبثقة
+const settingsModal = document.getElementById('settings-modal');
+document.getElementById('open-settings-btn')?.addEventListener('click', () => {
+    if (settingsModal) settingsModal.style.display = 'flex';
+});
+document.getElementById('close-settings')?.addEventListener('click', () => {
+    if (settingsModal) settingsModal.style.display = 'none';
+});
+
+async function loadSettings() {
+    onSnapshot(doc(db, "settings", "landing_page"), (docSnap) => {
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (document.getElementById('set-title')) document.getElementById('set-title').value = data.title || '';
+            if (document.getElementById('set-desc')) document.getElementById('set-desc').value = data.desc || '';
+            if (document.getElementById('set-price')) document.getElementById('set-price').value = data.price || '';
+            if (document.getElementById('set-oldprice')) document.getElementById('set-oldprice').value = data.oldPrice || '';
+            if (document.getElementById('set-whatsapp')) document.getElementById('set-whatsapp').value = data.whatsapp || '';
+            if (document.getElementById('set-pixels')) document.getElementById('set-pixels').value = data.pixels || '';
+            if (data.images && document.getElementById('set-images-list')) {
+                document.getElementById('set-images-list').value = data.images.join('\n');
+            }
+        }
+    });
+}
+
+// حفظ الإعدادات
+document.getElementById('settings-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const imagesText = document.getElementById('set-images-list').value;
+    let imagesArr = imagesText.split('\n').map(url => url.trim()).filter(url => url !== '');
+
+    await setDoc(doc(db, "settings", "landing_page"), {
+        title: document.getElementById('set-title').value,
+        desc: document.getElementById('set-desc').value,
+        price: document.getElementById('set-price').value,
+        oldPrice: document.getElementById('set-oldprice').value,
+        whatsapp: document.getElementById('set-whatsapp').value,
+        pixels: document.getElementById('set-pixels').value,
+        images: imagesArr
+    }, { merge: true });
+
+    alert('تم حفظ الإعدادات بنجاح!');
+    if (settingsModal) settingsModal.style.display = 'none';
+});
