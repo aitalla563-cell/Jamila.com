@@ -1,6 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@400;500;700;800&family=Cairo:wght@400;500;700;800&family=Almarai:wght@400;700;800&family=Changa:wght@400;600;700&family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap');
 
 /* ============ Design tokens ============ */
+/* المتغيرات أدناه قابلة للتغيير مباشرة من لوحة المبرمج (dev.html) دون الحاجة لتعديل هذا الملف */
 :root {
     --ink: #2B1B24;
     --ink-soft: #6B5560;
@@ -18,6 +19,8 @@
     --shadow-sm: 0 2px 10px -2px rgba(43, 27, 36, 0.08);
     --shadow-md: 0 16px 40px -16px rgba(43, 27, 36, 0.22);
     --radius: 18px;
+    --font-heading: 'Aref Ruqaa', serif;
+    --font-body: 'Tajawal', 'Segoe UI', Tahoma, sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,7 +28,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-    font-family: 'Tajawal', 'Segoe UI', Tahoma, sans-serif;
+    font-family: var(--font-body);
     background: var(--cream);
     color: var(--ink);
     line-height: 1.65;
@@ -57,7 +60,7 @@ img { max-width: 100%; display: block; }
 }
 
 .topbar .brand {
-    font-family: 'Aref Ruqaa', serif;
+    font-family: var(--font-heading);
     font-size: 1.15rem;
     font-weight: 700;
     letter-spacing: 0.5px;
@@ -115,7 +118,46 @@ img { max-width: 100%; display: block; }
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: opacity 0.25s ease;
+}
+
+/* ---- وضع التلاشي (fade) ---- */
+.img-box.mode-fade img {
+    transition: opacity 0.4s ease;
+}
+.img-box.mode-fade img.fading {
+    opacity: 0;
+}
+
+/* ---- وضع التكبير التدريجي (zoom / Ken Burns) ---- */
+.img-box.mode-zoom img {
+    animation: kenburns 5s ease-in-out infinite alternate;
+    transition: opacity 0.4s ease;
+}
+.img-box.mode-zoom img.fading {
+    opacity: 0;
+}
+@keyframes kenburns {
+    from { transform: scale(1); }
+    to { transform: scale(1.09); }
+}
+
+/* ---- وضع الانزلاق (slide) ---- */
+.gallery-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    direction: ltr;
+    transition: transform 0.45s cubic-bezier(.4,0,.2,1);
+}
+.gallery-track img {
+    width: 100%;
+    height: 100%;
+    flex: 0 0 100%;
+    object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .img-box.mode-zoom img { animation: none; }
 }
 
 .discount-badge {
@@ -173,7 +215,7 @@ img { max-width: 100%; display: block; }
 .rating-row .count { color: var(--ink-soft); font-size: 0.82rem; }
 
 h1#product-title {
-    font-family: 'Aref Ruqaa', serif;
+    font-family: var(--font-heading);
     font-size: 1.85rem;
     font-weight: 700;
     color: var(--ink);
@@ -488,4 +530,4 @@ button[type="submit"]:disabled { opacity: 0.75; cursor: not-allowed; }
 @media (max-width: 380px) {
     h1#product-title { font-size: 1.55rem; }
     .price { font-size: 1.7rem; }
-    }
+}
