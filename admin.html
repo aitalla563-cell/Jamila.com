@@ -1,95 +1,192 @@
-<!DOCTYPE html>
+here<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - جميلتي</title>
-    <style>
-        body { font-family: system-ui, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .stats { display: flex; gap: 15px; }
-        .stat-box { flex: 1; background: #eef2ff; padding: 15px; border-radius: 8px; text-align: center; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: right; }
-        th { background-color: #f8fafc; }
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; }
-        .modal-content { background:white; padding:20px; border-radius:8px; width:400px; }
-        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; }
-        .btn-primary { background: #3b82f6; color: white; }
-    </style>
+    <title>لوحة التحكم | جميلتي</title>
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
 
 <!-- شاشة تسجيل الدخول -->
-<div id="login-screen" class="card" style="max-width: 400px; margin: 50px auto;">
-    <h2>تسجيل الدخول للوحة التحكم</h2>
-    <form id="login-form">
-        <div style="margin-bottom:10px;">
-            <input type="email" id="login-email" placeholder="البريد الإلكتروني" required style="width:100%; padding:8px;">
-        </div>
-        <div style="margin-bottom:10px;">
-            <input type="password" id="login-pass" placeholder="كلمة السر" required style="width:100%; padding:8px;">
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;">دخول</button>
-    </form>
+<div id="login-screen" class="login-wrap">
+    <div class="login-card">
+        <div class="brand">✦ جميلتي</div>
+        <p class="sub">تسجيل الدخول للوحة التحكم</p>
+
+        <div class="login-error" id="login-error"></div>
+
+        <form id="login-form">
+            <div class="field">
+                <label for="login-email">البريد الإلكتروني</label>
+                <input type="email" id="login-email" placeholder="you@example.com" required autocomplete="username">
+            </div>
+            <div class="field">
+                <label for="login-pass">كلمة السر</label>
+                <div class="field-input-wrap">
+                    <input type="password" id="login-pass" placeholder="••••••••" required autocomplete="current-password">
+                    <button type="button" class="toggle-pass" id="toggle-pass">إظهار</button>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="login-submit">دخول</button>
+        </form>
+    </div>
 </div>
 
 <!-- لوحة التحكم -->
 <div id="admin-dashboard" style="display:none;">
-    <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
-        <h2>إدارة الطلبات والإعدادات</h2>
-        <div>
-            <button id="open-settings-btn" class="btn btn-primary">الإعدادات</button>
-            <button id="logout-btn" class="btn" style="background:#ef4444; color:white;">خروج</button>
+    <header class="app-header">
+        <div class="brand">✦ جميلتي <small>لوحة التحكم</small></div>
+        <div class="header-actions">
+            <button id="open-settings-btn" class="btn btn-ghost btn-sm">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+                <span class="full">الإعدادات</span>
+            </button>
+            <button id="export-csv-btn" class="btn btn-ghost btn-sm">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+                <span class="full">تصدير CSV</span>
+            </button>
+            <button id="logout-btn" class="btn btn-danger btn-sm">خروج</button>
         </div>
-    </div>
+    </header>
 
-    <div class="stats">
-        <div class="stat-box">إجمالي الطلبات: <h3 id="stat-total-orders">0</h3></div>
-        <div class="stat-box">قيد الانتظار: <h3 id="stat-pending-orders">0</h3></div>
-        <div class="stat-box">تم التسليم: <h3 id="stat-delivered-orders">0</h3></div>
-        <div class="stat-box">المبيعات: <h3 id="stat-total-sales">0 د.م</h3></div>
-    </div>
+    <main class="app-main">
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+                </div>
+                <div><div class="label">إجمالي الطلبات</div><div class="value" id="stat-total-orders">0</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                </div>
+                <div><div class="label">قيد الانتظار</div><div class="value" id="stat-pending-orders">0</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon delivered">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+                <div><div class="label">تم التسليم</div><div class="value" id="stat-delivered-orders">0</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon sales">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <div><div class="label">المبيعات المكتملة</div><div class="value" id="stat-total-sales">0 د.م</div></div>
+            </div>
+        </section>
 
-    <div class="card" style="margin-top:20px;">
-        <h3>قائمة الطلبات</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>التاريخ</th>
-                    <th>الاسم</th>
-                    <th>الهاتف</th>
-                    <th>المدينة</th>
-                    <th>المنتج</th>
-                    <th>الحالة</th>
-                    <th>إجراءات</th>
-                </tr>
-            </thead>
-            <tbody id="orders-table-body"></tbody>
-        </table>
-    </div>
+        <div class="toolbar">
+            <div class="search-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+                <input type="text" id="search-input" placeholder="ابحث بالاسم أو الهاتف أو المدينة...">
+            </div>
+            <div class="filter-chips" id="filter-chips">
+                <button class="chip active" data-status="all">الكل</button>
+                <button class="chip" data-status="قيد الانتظار">قيد الانتظار</button>
+                <button class="chip" data-status="مؤكد">مؤكد</button>
+                <button class="chip" data-status="تم الشحن">تم الشحن</button>
+                <button class="chip" data-status="تم التسليم">تم التسليم</button>
+                <button class="chip" data-status="ملغي">ملغي</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-head">
+                <h3>قائمة الطلبات</h3>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>الاسم</th>
+                            <th>الهاتف</th>
+                            <th>المدينة</th>
+                            <th>المنتج</th>
+                            <th>الحالة</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body"></tbody>
+                </table>
+            </div>
+            <div class="empty-state" id="empty-state" hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                <p id="empty-state-text">لا توجد طلبات بعد</p>
+            </div>
+        </div>
+    </main>
 </div>
 
 <!-- نافذة الإعدادات -->
-<div id="settings-modal" class="modal">
-    <div class="modal-content">
-        <h3>تعديل إعدادات الصفحة</h3>
+<div id="settings-modal" class="modal-overlay">
+    <div class="modal-box wide">
+        <div class="modal-head">
+            <h3>إعدادات صفحة المنتج</h3>
+            <button type="button" class="modal-close" id="close-settings">&times;</button>
+        </div>
         <form id="settings-form">
-            <input type="text" id="set-title" placeholder="عنوان المنتج" style="width:100%; margin-bottom:8px;">
-            <textarea id="set-desc" placeholder="الوصف" style="width:100%; margin-bottom:8px;"></textarea>
-            <input type="text" id="set-price" placeholder="السعر" style="width:100%; margin-bottom:8px;">
-            <input type="text" id="set-oldprice" placeholder="السعر القديم" style="width:100%; margin-bottom:8px;">
-            <input type="text" id="set-whatsapp" placeholder="رقم الواتساب (مثال: 212600000000)" style="width:100%; margin-bottom:8px;">
-            <textarea id="set-images-list" placeholder="روابط الصور (رابط كل صورة في سطر)" style="width:100%; margin-bottom:8px;"></textarea>
-            <textarea id="set-pixels" placeholder="أكواد Pixels" style="width:100%; margin-bottom:8px;"></textarea>
-            
-            <div style="display:flex; justify-content:space-between; margin-top:10px;">
-                <button type="submit" class="btn btn-primary">حفظ</button>
-                <button type="button" id="close-settings" class="btn">إلغاء</button>
+            <div class="modal-body">
+                <div class="form-section-title">معلومات المنتج</div>
+                <div class="field-row">
+                    <div>
+                        <label class="field-hint">عنوان المنتج</label>
+                        <input type="text" id="set-title" placeholder="مثال: كريم العناية بالبشرة">
+                    </div>
+                    <div>
+                        <label class="field-hint">رقم واتساب الاستقبال</label>
+                        <input type="text" id="set-whatsapp" placeholder="212600000000">
+                    </div>
+                </div>
+                <label class="field-hint" style="display:block; margin:12px 0 4px;">الوصف</label>
+                <textarea id="set-desc" placeholder="وصف المنتج الذي سيظهر للزبون"></textarea>
+
+                <div class="form-section-title">الأسعار</div>
+                <div class="field-row">
+                    <div>
+                        <label class="field-hint">السعر الحالي (د.م)</label>
+                        <input type="text" id="set-price" placeholder="299">
+                    </div>
+                    <div>
+                        <label class="field-hint">السعر قبل التخفيض (اختياري)</label>
+                        <input type="text" id="set-oldprice" placeholder="399">
+                    </div>
+                </div>
+
+                <div class="form-section-title">صور المنتج</div>
+                <label class="field-hint">رابط كل صورة في سطر منفصل — أول صورة تظهر أولاً</label>
+                <textarea id="set-images-list" placeholder="https://example.com/image1.jpg" style="margin-top:6px;"></textarea>
+                <div class="image-preview-row" id="image-preview-row"></div>
+
+                <div class="form-section-title">أكواد التتبع (Pixels)</div>
+                <label class="field-hint">أكواد Meta Pixel / TikTok Pixel — تُضاف تلقائياً لصفحة المنتج</label>
+                <textarea id="set-pixels" placeholder="<script>...</script>" style="margin-top:6px;"></textarea>
+            </div>
+            <div class="modal-foot">
+                <button type="button" class="btn btn-ghost" id="cancel-settings">إلغاء</button>
+                <button type="submit" class="btn btn-primary" id="save-settings-btn">حفظ التغييرات</button>
             </div>
         </form>
     </div>
 </div>
+
+<!-- نافذة تأكيد الحذف -->
+<div id="confirm-modal" class="modal-overlay">
+    <div class="modal-box confirm-box">
+        <div class="confirm-icon">!</div>
+        <h3>حذف الطلب؟</h3>
+        <p>هذا الإجراء لا يمكن التراجع عنه.</p>
+        <div class="confirm-actions">
+            <button type="button" class="btn btn-ghost" id="confirm-cancel">إلغاء</button>
+            <button type="button" class="btn btn-danger" id="confirm-delete">حذف نهائياً</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-stack" id="toast-stack"></div>
 
 <script type="module" src="admin.js"></script>
 </body>
