@@ -1,4 +1,4 @@
-here// admin.js
+// admin.js
 import {
     db, auth, doc, onSnapshot, updateDoc, setDoc, deleteDoc,
     signInWithEmailAndPassword, signOut, onAuthStateChanged,
