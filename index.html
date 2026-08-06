@@ -3,44 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جميلتي - Jamilati</title>
-    <!-- ربط ملف التنسيق -->
+    <title>جميلتي | Jamilati</title>
+    <meta name="description" content="اطلبي الآن وادفعي عند الاستلام">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
-    <div class="img-box">
-        <img id="main-product-img" src="https://via.placeholder.com/400x300" alt="صورة المنتج">
-    </div>
-    
-    <h1 id="product-title">اسم المنتج...</h1>
-    <p id="product-desc">وصف المنتج سيظهر هنا تلقائياً...</p>
-    
-    <div class="price-wrapper">
-        <span class="price" id="product-price">0 د.م</span>
-        <span class="old-price" id="product-oldprice"></span>
-    </div>
+<header class="topbar">
+    <span class="brand">✦ جميلتي</span>
+    <span class="trust-line">توصيل لجميع المدن 🇲🇦</span>
+</header>
 
-    <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color, #e2e8f0);">
+<div class="page">
+    <main class="container">
 
-    <form id="order-form">
-        <h3>أطلب الآن واستلم عند التوصيل</h3>
-        <div class="form-group">
-            <label for="client-name">الاسم الكامل:</label>
-            <input type="text" id="client-name" required placeholder="أدخل اسمك الكامل">
-        </div>
-        <div class="form-group">
-            <label for="client-phone">رقم الهاتف:</label>
-            <input type="tel" id="client-phone" required placeholder="06XXXXXXXX">
-        </div>
-        <div class="form-group">
-            <label for="client-city">المدينة:</label>
-            <input type="text" id="client-city" required placeholder="مدينتك">
-        </div>
-        <button type="submit">تأكيد الطلب الآن</button>
-    </form>
+        <!-- معرض الصور -->
+        <section class="gallery">
+            <div class="gallery-frame">
+                <div class="img-box">
+                    <span class="discount-badge" id="discount-badge" hidden>خصم <span id="discount-percent"></span>%</span>
+                    <img id="main-product-img" src="https://via.placeholder.com/400x300" alt="صورة المنتج">
+                </div>
+            </div>
+            <div class="gallery-dots" id="gallery-dots"></div>
+        </section>
+
+        <!-- معلومات المنتج -->
+        <section class="info">
+            <div class="rating-row">
+                <span class="stars">★★★★★</span>
+                <span class="count">(+500 عميلة راضية)</span>
+            </div>
+
+            <h1 id="product-title">اسم المنتج...</h1>
+            <p id="product-desc">وصف المنتج سيظهر هنا تلقائياً...</p>
+
+            <div class="price-wrapper">
+                <span class="price" id="product-price">0 د.م</span>
+                <span class="old-price" id="product-oldprice"></span>
+            </div>
+
+            <div class="ornament-divider"><span class="diamond"></span></div>
+
+            <div class="trust-badges">
+                <div class="trust-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/></svg>
+                    <p>توصيل سريع</p>
+                </div>
+                <div class="trust-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+                    <p>الدفع عند الاستلام</p>
+                </div>
+                <div class="trust-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l7 3v6c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V5z"/><path d="M9 12l2 2 4-4"/></svg>
+                    <p>ضمان الجودة</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- استمارة الطلب -->
+        <section class="order-section" id="order-section">
+            <form id="order-form" novalidate>
+                <h3>أكملي طلبك الآن</h3>
+                <p class="form-sub">سنتصل بك خلال دقائق لتأكيد الطلب</p>
+
+                <div class="form-group">
+                    <label for="client-name">الاسم الكامل</label>
+                    <div class="input-wrap">
+                        <input type="text" id="client-name" required placeholder="أدخلي اسمك الكامل" autocomplete="name">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-6 7.5-6s6 2 7.5 6"/></svg>
+                    </div>
+                    <span class="field-error" id="error-name"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="client-phone">رقم الهاتف</label>
+                    <div class="input-wrap">
+                        <input type="tel" id="client-phone" required placeholder="06XXXXXXXX" autocomplete="tel" inputmode="numeric">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5c0 8.5 6.5 15 15 15l2-4-5-2-2 2c-2-1-4-3-5-5l2-2-2-5-4 1z"/></svg>
+                    </div>
+                    <span class="field-error" id="error-phone"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="client-city">المدينة</label>
+                    <div class="input-wrap">
+                        <input type="text" id="client-city" required placeholder="مدينتك" autocomplete="address-level2">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.3"/></svg>
+                    </div>
+                    <span class="field-error" id="error-city"></span>
+                </div>
+
+                <button type="submit" id="submit-btn">
+                    <span class="btn-text">تأكيد الطلب الآن</span>
+                    <span class="spinner" id="btn-spinner" hidden></span>
+                </button>
+                <p class="secure-note">🔒 معلوماتك محمية ولن يتم مشاركتها مع أي جهة</p>
+            </form>
+        </section>
+
+        <p class="site-footer">© <span id="footer-year"></span> جميلتي — جميع الحقوق محفوظة</p>
+    </main>
 </div>
+
+<!-- شريط الطلب الثابت -->
+<div class="sticky-cta" id="sticky-cta">
+    <span class="sticky-price" id="sticky-price-text">0 د.م</span>
+    <button type="button" id="sticky-order-btn">اطلبي الآن</button>
+</div>
+
+<!-- نافذة تأكيد الطلب -->
+<div class="success-overlay" id="success-overlay">
+    <div class="success-card">
+        <div class="success-icon">✓</div>
+        <h3>تم استلام طلبك بنجاح</h3>
+        <p>سيتصل بك فريقنا قريباً لتأكيد الطلب والتوصيل</p>
+        <button type="button" id="success-whatsapp-btn" hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.7.8-.8 1-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5.1-.1.2-.3.4-.4.1-.1.2-.2.2-.4.1-.1 0-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9 0 1.1.8 2.2.9 2.4.1.2 1.6 2.5 4 3.4.5.2.9.4 1.3.5.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1 .2-.5.2-.9.1-1z"/></svg>
+            <span>تواصل عبر واتساب</span>
+        </button>
+        <button type="button" id="success-close-btn" class="ghost">إغلاق</button>
+    </div>
+</div>
+
+<div id="pixel-container"></div>
 
 <script type="module" src="app.js"></script>
 </body>
