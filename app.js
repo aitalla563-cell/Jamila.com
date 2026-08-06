@@ -10,6 +10,15 @@ let currentConfig = {
 let galleryImages = [];
 let activeSlide = 0;
 let pixelsInjected = false;
+let galleryAutoplayTimer = null;
+
+// إعدادات التصميم الافتراضية (يتم تعديلها من لوحة المبرمج dev.html)
+let designConfig = {
+    siteName: '',
+    colors: {},
+    fonts: {},
+    gallery: { mode: 'fade', autoplay: false, interval: 4 }
+};
 
 const $ = (id) => document.getElementById(id);
 
@@ -18,6 +27,50 @@ document.addEventListener('DOMContentLoaded', () => {
     if (yearEl) yearEl.innerText = new Date().getFullYear();
 });
 
+// ============ 0. مزامنة إعدادات التصميم (ألوان / خطوط / اسم الموقع / وضع المعرض) ============
+onSnapshot(doc(db, "settings", "site_design"), (docSnap) => {
+    if (!docSnap.exists()) return;
+    const data = docSnap.data();
+    designConfig = {
+        siteName: data.siteName || '',
+        colors: data.colors || {},
+        fonts: data.fonts || {},
+        gallery: { mode: 'fade', autoplay: false, interval: 4, ...(data.gallery || {}) }
+    };
+    applyDesign(designConfig);
+    // إعادة رسم المعرض إذا تغيّر وضع العرض
+    if (galleryImages.length > 0) renderGallery();
+});
+
+function applyDesign(cfg) {
+    const root = document.documentElement.style;
+
+    const colorMap = {
+        bg: '--cream',
+        card: '--card',
+        text: '--ink',
+        textSoft: '--ink-soft',
+        primary: '--rose',
+        primaryDark: '--rose-dark',
+        accent: '--gold'
+    };
+    Object.entries(colorMap).forEach(([key, cssVar]) => {
+        if (cfg.colors && cfg.colors[key]) root.setProperty(cssVar, cfg.colors[key]);
+    });
+
+    if (cfg.fonts && cfg.fonts.heading) root.setProperty('--font-heading', `'${cfg.fonts.heading}', serif`);
+    if (cfg.fonts && cfg.fonts.body) root.setProperty('--font-body', `'${cfg.fonts.body}', 'Segoe UI', Tahoma, sans-serif`);
+
+    if (cfg.siteName) {
+        document.title = document.title.includes('|')
+            ? document.title.replace(/^.*\|/, `${cfg.siteName} |`)
+            : document.title;
+        // إن وُجد عنصر بمعرّف site-name داخل الصفحة، يتم تحديث نصه تلقائياً
+        const siteNameEl = $('site-name');
+        if (siteNameEl) siteNameEl.innerText = cfg.siteName;
+    }
+}
+
 // ============ 1. مزامنة إعدادات الصفحة مباشرة من لوحة التحكم ============
 onSnapshot(doc(db, "settings", "landing_page"), (docSnap) => {
     if (!docSnap.exists()) return;
@@ -25,7 +78,7 @@ onSnapshot(doc(db, "settings", "landing_page"), (docSnap) => {
     currentConfig = { ...currentConfig, ...data };
 
     if (data.title) {
-        document.title = `${data.title} | جميلتي`;
+        document.title = `${data.title} | ${designConfig.siteName || 'جميلتي'}`;
         setText('product-title', data.title);
     }
     if (data.desc) setText('product-desc', data.desc);
@@ -72,15 +125,83 @@ function updateStickyPrice(price) {
     if (el) el.innerText = formatPrice(price);
 }
 
-// ============ 2. معرض الصور ============
+// ============ 2. معرض الصور (يدعم 3 طرق عرض: تلاشي / انزلاق / تكبير تدريجي) ============
 function renderGallery() {
-    const img = $('main-product-img');
+    const box = document.querySelector('.img-box');
     const dotsWrap = $('gallery-dots');
-    if (!img || !dotsWrap) return;
+    if (!box || galleryImages.length === 0) return;
 
     if (activeSlide >= galleryImages.length) activeSlide = 0;
-    img.src = galleryImages[activeSlide];
 
+    const mode = (designConfig.gallery && designConfig.gallery.mode) || 'fade';
+    box.classList.remove('mode-fade', 'mode-slide', 'mode-zoom');
+    box.classList.add(`mode-${mode}`);
+
+    if (mode === 'slide') {
+        renderSlideMode(box);
+    } else {
+        renderSingleImageMode(box, mode);
+    }
+
+    renderGalleryDots(dotsWrap);
+    setupGalleryAutoplay();
+}
+
+function renderSingleImageMode(box, mode) {
+    let img = box.querySelector('#main-product-img');
+    if (!img) {
+        box.innerHTML = '';
+        img = document.createElement('img');
+        img.id = 'main-product-img';
+        img.alt = currentConfig.title || '';
+        box.appendChild(img);
+    }
+    if (img.src === galleryImages[activeSlide]) return;
+
+    if (mode === 'zoom' || mode === 'fade') {
+        img.classList.add('fading');
+        setTimeout(() => {
+            img.src = galleryImages[activeSlide];
+            img.classList.remove('fading');
+        }, 180);
+    } else {
+        img.src = galleryImages[activeSlide];
+    }
+}
+
+function renderSlideMode(box) {
+    let track = box.querySelector('.gallery-track');
+    if (!track) {
+        box.innerHTML = '';
+        track = document.createElement('div');
+        track.className = 'gallery-track';
+        galleryImages.forEach((url, i) => {
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = `${currentConfig.title || ''} ${i + 1}`;
+            if (i === 0) img.id = 'main-product-img';
+            track.appendChild(img);
+        });
+        box.appendChild(track);
+    } else {
+        // إعادة بناء الشريط إذا تغيّر عدد الصور
+        const imgs = track.querySelectorAll('img');
+        if (imgs.length !== galleryImages.length) {
+            track.innerHTML = '';
+            galleryImages.forEach((url, i) => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = `${currentConfig.title || ''} ${i + 1}`;
+                if (i === 0) img.id = 'main-product-img';
+                track.appendChild(img);
+            });
+        }
+    }
+    track.style.transform = `translateX(-${activeSlide * 100}%)`;
+}
+
+function renderGalleryDots(dotsWrap) {
+    if (!dotsWrap) return;
     dotsWrap.innerHTML = '';
     if (galleryImages.length <= 1) return;
 
@@ -95,6 +216,21 @@ function renderGallery() {
         });
         dotsWrap.appendChild(dot);
     });
+}
+
+function setupGalleryAutoplay() {
+    if (galleryAutoplayTimer) {
+        clearInterval(galleryAutoplayTimer);
+        galleryAutoplayTimer = null;
+    }
+    const g = designConfig.gallery || {};
+    if (!g.autoplay || galleryImages.length <= 1) return;
+
+    const intervalMs = Math.max(1.5, Number(g.interval) || 4) * 1000;
+    galleryAutoplayTimer = setInterval(() => {
+        activeSlide = (activeSlide + 1) % galleryImages.length;
+        renderGallery();
+    }, intervalMs);
 }
 
 // دعم التمرير باللمس على الصورة
