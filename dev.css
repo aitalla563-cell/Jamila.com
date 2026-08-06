@@ -1,0 +1,396 @@
+/* dev.css — إضافات خاصة بلوحة المبرمج فوق admin.css */
+
+/* ============ التبويبات ============ */
+.dev-tabs {
+    display: flex;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px;
+    margin-bottom: 18px;
+}
+
+.dev-tab {
+    flex: 1;
+    padding: 11px 14px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-soft);
+    font-weight: 800;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.dev-tab svg { width: 16px; height: 16px; }
+
+.dev-tab.active {
+    background: var(--brand);
+    color: #fff;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ============ شبكة الألوان ============ */
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.color-field {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+}
+
+.color-field .swatch-wrap {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1.5px solid var(--border);
+}
+
+.color-field input[type="color"] {
+    position: absolute;
+    inset: -4px;
+    width: calc(100% + 8px);
+    height: calc(100% + 8px);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.color-field .color-meta { flex: 1; min-width: 0; }
+
+.color-field .color-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.color-field .hex-input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 0.78rem;
+    font-family: 'Courier New', monospace;
+    direction: ltr;
+    text-align: left;
+    color: var(--text-soft);
+    outline: none;
+}
+
+.color-field .hex-input:focus { border-color: var(--brand); }
+
+/* ============ اختيار الخطوط ============ */
+.font-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.font-option {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    background: #fff;
+    text-align: center;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    position: relative;
+}
+
+.font-option:hover { border-color: var(--brand); }
+
+.font-option.selected {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(168, 50, 74, 0.1);
+}
+
+.font-option.selected::after {
+    content: "✓";
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 18px;
+    height: 18px;
+    background: var(--brand);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.font-option .font-preview {
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+}
+
+.font-option .font-name {
+    font-size: 0.75rem;
+    color: var(--text-soft);
+    font-weight: 700;
+}
+
+/* ============ بطاقات وضع عرض المعرض ============ */
+.mode-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.mode-card {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 12px;
+    text-align: center;
+    cursor: pointer;
+    background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    position: relative;
+}
+
+.mode-card:hover { border-color: var(--brand); }
+
+.mode-card.selected {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(168, 50, 74, 0.1);
+}
+
+.mode-card.selected::after {
+    content: "✓";
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 18px;
+    height: 18px;
+    background: var(--brand);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mode-card svg {
+    width: 26px;
+    height: 26px;
+    color: var(--brand);
+    margin-bottom: 8px;
+}
+
+.mode-card .mode-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 3px;
+}
+
+.mode-card .mode-desc {
+    font-size: 0.72rem;
+    color: var(--text-soft);
+}
+
+/* ============ خيارات إضافية للمعرض (تشغيل تلقائي / سرعة) ============ */
+.autoplay-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.switch {
+    position: relative;
+    width: 42px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.switch .slider {
+    position: absolute;
+    inset: 0;
+    background: var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.switch .slider::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    top: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.switch input:checked + .slider { background: var(--brand); }
+.switch input:checked + .slider::before { transform: translateX(-18px); }
+
+.speed-row {
+    margin-top: 12px;
+    display: none;
+}
+
+.speed-row.visible { display: block; }
+
+.speed-row input[type="range"] {
+    width: 100%;
+    accent-color: var(--brand);
+}
+
+.speed-row .speed-value {
+    font-size: 0.78rem;
+    color: var(--text-soft);
+    font-weight: 700;
+}
+
+/* ============ حقل اسم الموقع ============ */
+.sitename-field {
+    max-width: 420px;
+}
+
+/* ============ المعاينة الحيّة ============ */
+.live-preview {
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-top: 10px;
+    position: sticky;
+    top: 88px;
+}
+
+.live-preview .lp-topbar {
+    padding: 10px 16px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    transition: background 0.2s, color 0.2s, font-family 0.2s;
+}
+
+.live-preview .lp-body {
+    padding: 18px;
+    transition: background 0.2s;
+}
+
+.live-preview .lp-card {
+    border-radius: 12px;
+    padding: 16px;
+    transition: background 0.2s;
+}
+
+.live-preview .lp-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    transition: color 0.2s, font-family 0.2s;
+}
+
+.live-preview .lp-desc {
+    font-size: 0.82rem;
+    margin-bottom: 12px;
+    transition: color 0.2s;
+}
+
+.live-preview .lp-price {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    transition: color 0.2s;
+}
+
+.live-preview .lp-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 11px;
+    border-radius: 9px;
+    font-weight: 800;
+    font-size: 0.88rem;
+    color: #fff;
+    transition: background 0.2s;
+}
+
+.live-preview .lp-caption {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--text-soft);
+    padding: 8px;
+    background: var(--bg);
+}
+
+/* ============ تخطيط قسم التصميم بعمودين ============ */
+.design-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .design-layout { grid-template-columns: 1fr; }
+    .live-preview { position: static; }
+}
+
+/* ============ زر رابط بين اللوحتين ============ */
+.panel-switch-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+}
+
+/* ============ نص توضيحي أعلى القسم ============ */
+.section-note {
+    font-size: 0.8rem;
+    color: var(--text-soft);
+    background: var(--bg);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    line-height: 1.7;
+}
+
+/* ============ زر إعادة الضبط ============ */
+.reset-link {
+    background: none;
+    border: none;
+    color: var(--danger);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: underline;
+    padding: 0;
+    margin-top: 10px;
+}

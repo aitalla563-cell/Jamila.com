@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة المبرمج | جميلتي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&family=Changa:wght@400;600;700&family=Tajawal:wght@400;500;700;800&family=Cairo:wght@400;500;700;800&family=Almarai:wght@400;700;800&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="dev.css">
+</head>
+<body>
+
+<!-- شاشة تسجيل الدخول -->
+<div id="login-screen" class="login-wrap">
+    <div class="login-card">
+        <div class="brand">✦ جميلتي</div>
+        <p class="sub">تسجيل دخول المبرمج</p>
+
+        <div class="login-error" id="login-error"></div>
+
+        <form id="login-form">
+            <div class="field">
+                <label for="login-email">البريد الإلكتروني</label>
+                <input type="email" id="login-email" placeholder="you@example.com" required autocomplete="username">
+            </div>
+            <div class="field">
+                <label for="login-pass">كلمة السر</label>
+                <div class="field-input-wrap">
+                    <input type="password" id="login-pass" placeholder="••••••••" required autocomplete="current-password">
+                    <button type="button" class="toggle-pass" id="toggle-pass">إظهار</button>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="login-submit">دخول</button>
+        </form>
+    </div>
+</div>
+
+<!-- لوحة المبرمج -->
+<div id="dev-dashboard" style="display:none;">
+    <header class="app-header">
+        <div class="brand">✦ جميلتي <small>لوحة المبرمج</small></div>
+        <div class="header-actions">
+            <a href="admin.html" class="btn btn-ghost btn-sm panel-switch-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+                <span class="full">لوحة الطلبات</span>
+            </a>
+            <button id="logout-btn" class="btn btn-danger btn-sm">خروج</button>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <div class="section-note">
+            هذه الصفحة تتحكم في كل ما يظهر للزبون في صفحة المنتج: النصوص، الصور، الأسعار، الألوان، الخطوط، وطريقة عرض الصور — أي تغيير هنا ينعكس مباشرة على الموقع دون الحاجة لتعديل الكود.
+        </div>
+
+        <div class="dev-tabs">
+            <button class="dev-tab active" data-tab="content">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+                المحتوى (نصوص وصور)
+            </button>
+            <button class="dev-tab" data-tab="design">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="13.5" cy="6.5" r="0.5"/><circle cx="17.5" cy="10.5" r="0.5"/><circle cx="8.5" cy="7.5" r="0.5"/><circle cx="6.5" cy="12.5" r="0.5"/><path d="M12 2a10 10 0 1 0 0 20 3 3 0 0 0 3-3 2 2 0 0 1 2-2h1a5 5 0 0 0 5-5 10 10 0 0 0-11-10z"/></svg>
+                التصميم (ألوان وخطوط)
+            </button>
+        </div>
+
+        <!-- ============ تبويب المحتوى ============ -->
+        <section class="tab-panel active" id="tab-content">
+            <div class="card">
+                <div class="card-head"><h3>معلومات المنتج</h3></div>
+                <form id="content-form">
+                    <div class="form-section-title">النصوص الأساسية</div>
+                    <div class="field-row">
+                        <div>
+                            <label class="field-hint">عنوان المنتج</label>
+                            <input type="text" id="set-title" placeholder="مثال: كريم العناية بالبشرة">
+                        </div>
+                        <div>
+                            <label class="field-hint">رقم واتساب الاستقبال</label>
+                            <input type="text" id="set-whatsapp" placeholder="212600000000">
+                        </div>
+                    </div>
+                    <label class="field-hint" style="display:block; margin:12px 0 4px;">الوصف</label>
+                    <textarea id="set-desc" placeholder="وصف المنتج الذي سيظهر للزبون"></textarea>
+
+                    <div class="form-section-title">الأسعار</div>
+                    <div class="field-row">
+                        <div>
+                            <label class="field-hint">السعر الحالي (د.م)</label>
+                            <input type="text" id="set-price" placeholder="299">
+                        </div>
+                        <div>
+                            <label class="field-hint">السعر قبل التخفيض (اختياري)</label>
+                            <input type="text" id="set-oldprice" placeholder="399">
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">صور المنتج</div>
+                    <label class="field-hint">رابط كل صورة في سطر منفصل — يمكن إضافة أو حذف أي عدد من الصور. أول صورة تظهر أولاً</label>
+                    <textarea id="set-images-list" placeholder="https://example.com/image1.jpg" style="margin-top:6px; min-height:100px;"></textarea>
+                    <div class="image-preview-row" id="image-preview-row"></div>
+
+                    <div class="form-section-title">أكواد التتبع (Pixels)</div>
+                    <label class="field-hint">أكواد Meta Pixel / TikTok Pixel — تُضاف تلقائياً لصفحة المنتج</label>
+                    <textarea id="set-pixels" placeholder="<script>...</script>" style="margin-top:6px;"></textarea>
+
+                    <div style="margin-top:20px; display:flex; justify-content:flex-end;">
+                        <button type="submit" class="btn btn-primary" id="save-content-btn">حفظ المحتوى</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ============ تبويب التصميم ============ -->
+        <section class="tab-panel" id="tab-design">
+            <div class="design-layout">
+                <div>
+                    <div class="card" style="margin-bottom:16px;">
+                        <div class="card-head"><h3>اسم الموقع</h3></div>
+                        <label class="field-hint">يظهر في عنوان المتصفح وشريط العلامة أعلى الصفحة</label>
+                        <input type="text" id="set-sitename" class="sitename-field" placeholder="جميلتي" style="margin-top:8px; width:100%; padding:11px 13px; border:1.5px solid var(--border); border-radius:9px; font-size:0.9rem;">
+                    </div>
+
+                    <div class="card" style="margin-bottom:16px;">
+                        <div class="card-head"><h3>الألوان</h3></div>
+                        <div class="color-grid" id="color-grid">
+                            <!-- تُبنى ديناميكياً عبر dev.js -->
+                        </div>
+                        <button type="button" class="reset-link" id="reset-colors-btn">استعادة الألوان الافتراضية</button>
+                    </div>
+
+                    <div class="card" style="margin-bottom:16px;">
+                        <div class="card-head"><h3>خط العناوين</h3></div>
+                        <div class="font-grid" id="heading-font-grid"></div>
+                    </div>
+
+                    <div class="card" style="margin-bottom:16px;">
+                        <div class="card-head"><h3>خط النصوص</h3></div>
+                        <div class="font-grid" id="body-font-grid"></div>
+                    </div>
+
+                    <div class="card" style="margin-bottom:16px;">
+                        <div class="card-head"><h3>طريقة عرض صور المنتج</h3></div>
+                        <div class="mode-grid" id="gallery-mode-grid">
+                            <div class="mode-card" data-mode="fade">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2" opacity="0.4"/><rect x="6" y="7" width="12" height="10" rx="1"/></svg>
+                                <div class="mode-title">تلاشي</div>
+                                <div class="mode-desc">تتلاشى الصورة وتظهر التي تليها</div>
+                            </div>
+                            <div class="mode-card" data-mode="slide">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h18"/><path d="M15 6l6 6-6 6"/><path d="M9 6L3 12l6 6"/></svg>
+                                <div class="mode-title">انزلاق</div>
+                                <div class="mode-desc">الصور تتحرك جانبياً كسلايدر</div>
+                            </div>
+                            <div class="mode-card" data-mode="zoom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="6"/><path d="m21 21-4.35-4.35"/><path d="M10 8v4M8 10h4"/></svg>
+                                <div class="mode-title">تكبير تدريجي</div>
+                                <div class="mode-desc">تأثير تقريب بطيء ومستمر على الصورة</div>
+                            </div>
+                        </div>
+
+                        <div class="autoplay-row">
+                            <div>
+                                <div style="font-weight:700; font-size:0.85rem;">تبديل الصور تلقائياً</div>
+                                <div style="font-size:0.75rem; color:var(--text-soft); margin-top:2px;">بدون تدخل الزبون</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="set-autoplay">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="speed-row" id="speed-row">
+                            <label class="field-hint">سرعة التبديل: <span class="speed-value" id="speed-value">4 ثواني</span></label>
+                            <input type="range" id="set-interval" min="2" max="10" step="1" value="4">
+                        </div>
+                    </div>
+
+                    <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+                        <button type="button" class="btn btn-primary" id="save-design-btn">حفظ التصميم</button>
+                    </div>
+                </div>
+
+                <!-- معاينة حية -->
+                <div>
+                    <label class="field-hint" style="display:block; margin-bottom:6px; font-weight:800;">معاينة حية</label>
+                    <div class="live-preview" id="live-preview">
+                        <div class="lp-topbar" id="lp-topbar">✦ جميلتي</div>
+                        <div class="lp-body" id="lp-body">
+                            <div class="lp-card" id="lp-card">
+                                <div class="lp-title" id="lp-title">اسم المنتج</div>
+                                <div class="lp-desc" id="lp-desc">وصف مختصر وجذاب للمنتج يظهر هنا للزبون</div>
+                                <div class="lp-price" id="lp-price">299 د.م</div>
+                                <div class="lp-btn" id="lp-btn">تأكيد الطلب الآن</div>
+                            </div>
+                        </div>
+                        <div class="lp-caption">هذا شكل تقريبي — المعاينة الفعلية تظهر في صفحة المنتج</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<div class="toast-stack" id="toast-stack"></div>
+
+<script type="module" src="dev.js"></script>
+</body>
+</html>
