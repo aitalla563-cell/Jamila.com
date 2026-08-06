@@ -1,14 +1,14 @@
-// firebase.js
+here// firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-import { 
-    getFirestore, 
-    collection, 
-    addDoc, 
-    doc, 
-    onSnapshot, 
-    serverTimestamp, 
-    setDoc, 
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    doc,
+    onSnapshot,
+    serverTimestamp,
+    setDoc,
     updateDoc,
     getDocs,
     getDoc,
@@ -17,11 +17,11 @@ import {
     deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-import { 
-    getAuth, 
-    signInWithEmailAndPassword, 
-    signOut, 
-    onAuthStateChanged 
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 // إعدادات مشروع Firebase
@@ -35,7 +35,7 @@ const firebaseConfig = {
     measurementId: "G-50EG1F2VLQ"
 };
 
-// تهيئة التقييم والخدمات
+// تهيئة التطبيق والخدمات
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
